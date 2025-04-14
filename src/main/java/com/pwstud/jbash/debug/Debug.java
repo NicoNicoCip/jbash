@@ -19,6 +19,10 @@ public abstract class Debug {
    * @param args The arguments to be logged and printed.
    */
   public static final <T> void log(T ... args) {
+    if(args.length == 0) {
+      System.out.print("");
+    }
+
     for (T arg : args) {
       LogsManager.log(arg.toString());
       System.out.print(arg);
@@ -30,6 +34,10 @@ public abstract class Debug {
    * @param args The arguments to be logged and printed to new lines.
    */
   public static final <T> void logn(T ... args) {
+    if(args.length == 0) {
+      System.out.print("\n");
+    }
+
     for (T arg : args) {
       LogsManager.log(arg.toString());
       System.out.println(arg);
@@ -63,6 +71,10 @@ public abstract class Debug {
    * @param args The arguments to be printed.
    */
   public static final <T> void out(T ... args) {
+    if(args.length == 0) {
+      return;
+    }
+
     System.out.print(args);
   }
 
@@ -80,6 +92,8 @@ public abstract class Debug {
    * Prints and clears the buffer, ready for the next bulk print.
    */
   public static final void bulkOut() {
+    if(bulkBuffer.toString().equals("")) return;
+
     log(bulkBuffer.toString().replace("\u001F", ""));
     bulkBuffer.setLength(0);
   }
@@ -90,6 +104,8 @@ public abstract class Debug {
    * bulkOut and this one.
    */
   public static final void bulkOut(String format) {
+    if(bulkBuffer.toString().equals("")) return;
+
     logf(format, bulkBuffer.toString().split("\u001F"));
     bulkBuffer.setLength(0);
   }

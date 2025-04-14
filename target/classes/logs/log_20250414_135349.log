@@ -1,0 +1,6 @@
+[log_20250414_135349.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250414_135349.log, 2025-04-14T11:53:49.8720086Z, 2025-04-14T11:53:49.8854023Z, 185 bytes][META-END]
+System LoadedEntered bashecho a The command ehco not found.
+java.lang.NullPointerException: Cannot invoke "com.pwstud.jbash.shell.processes.JBASHProcess.stdIn(String[])" because "proc" is null
+	at com.pwstud.jbash.shell.processes.bash.create(bash.java:27)
+	at com.pwstud.jbash.shell.processes.system.create(system.java:11)
+	at com.pwstud.jbash.Main.main(Main.java:13)

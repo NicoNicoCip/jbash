@@ -1,33 +1,27 @@
 package com.pwstud.jbash.shell.processes;
 
-import java.util.Arrays;
-
 import com.pwstud.jbash.Main;
 import com.pwstud.jbash.debug.Debug;
 import com.pwstud.jbash.shell.input.Input;
 import com.pwstud.jbash.utils.StringUtils;
 
-public class bash extends JBASHProcess {
+public class bash implements JBASHProcess {
   Input input = new Input();
 
   @Override
-  public void create() {
-    Debug.logn("Entered bash");
-    try {
-      input.TerminalBASIC();
-    } catch (Exception e) {
-      Debug.logError(e);
-    }
-  }
+  public String stdout(String[] stdin) {
 
-  @Override
-  public void update() {
-    while (running) {
-      String in = input.read();
-      String[] command = StringUtils.breakApart(in);
-      JBASHProcess proc = Main.jbashpm.getProcessByID(command[0].toLowerCase() + ":0");
-      proc.stdIn(command);
-      stdOut(proc.stdOut());
+    String in = Input.read();
+    if(in.equals("")) return "10"; // exit without closing
+
+    String[] command = StringUtils.breakApart(in);
+    JBASHProcess proc = Main.jbashpm.getProcessByID(command[0].toLowerCase());
+
+    if (proc == null) {
+      Debug.log("The command \"", command[0], "\" not found.\n");
+      return "10"; // exit without closing
     }
+
+    return proc.stdout(command);
   }
 }

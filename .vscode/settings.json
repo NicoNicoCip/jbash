@@ -16,5 +16,6 @@
   // Force manual suggestion triggering
   "editor.acceptSuggestionOnEnter": "on",
   "editor.tabCompletion": "off",
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic"
 }

@@ -1,23 +1,21 @@
 package com.pwstud.jbash.shell.processes;
 
 import com.pwstud.jbash.Main;
-import com.pwstud.jbash.debug.Debug;
 
-public class system extends JBASHProcess {
-  @Override
-  public void create() {
-    Debug.logn("System Loaded");
-    Debug.logn(this.getSerial());
-  }
+public class system implements JBASHProcess {
+
+  /*
+   * This process manages and keeps a index of all the processes ran and their id.
+   * THis can be used to switch between processes based on the ones that were allready ran.
+   * 
+   * VERSION 1.0:
+   *  Runs the bas process by default and nothing more.
+   */
+  public static JBASHProcess lastProcess = null;
 
   @Override
-  public void update() {
-    while (running) {
-      JBASHProcess proc = Main.jbashpm.getProcessByID("bash:0");
-      proc.stdIn(null);
-      proc.create();
-      proc.update();
-      stdOut("COMPLETED");
-    }
+  public String stdout(String[] stdin) {
+    lastProcess = Main.jbashpm.getProcessByID("bash");
+    return lastProcess.stdout(null);
   }
 }

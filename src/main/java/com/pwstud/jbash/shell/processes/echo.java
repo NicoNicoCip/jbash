@@ -1,20 +1,21 @@
 package com.pwstud.jbash.shell.processes;
 
+import java.util.Arrays;
+
 import com.pwstud.jbash.debug.Debug;
 
-public class echo extends JBASHProcess{
-  @Override
-  public void create() {
-    String[] stdIn = stdIn();
-    for (String in : stdIn) {
-      Debug.bulkIn(in, " ");
-    }
-    Debug.bulkOut();
-    Debug.logn("I RAN!!!");
-  }
+public class echo implements JBASHProcess {
 
   @Override
-  public void update() {
-    // unimplemented
+  public String stdout(String[] stdin) {
+    stdin = Arrays.copyOfRange(stdin, 1, stdin.length);
+    boolean printed = false;
+    for (String in : stdin) {
+      Debug.bulkIn(in, " ");
+      printed = true;
+    }
+    Debug.bulkOut();
+    if(printed) Debug.logn();
+    return "1";
   }
 }

@@ -18,7 +18,7 @@ import com.pwstud.jbash.debug.Debug;
 
 public class Input {
   public static LineReader reader;
-  private static Path historyFile = Paths.get("data/system/.historial");
+  private static Path historyFile = Paths.get("/src/main/resources/system/.historial");
 
   public static void create() {
   
@@ -46,7 +46,8 @@ public class Input {
   }
 
   public static String read() {
-    return reader.readLine(">> ").replaceAll("`\n", "\n");
+    String out = reader.readLine(">> ").replaceAll("`\n", "\n");
+    return out;
   }
 
   public static <T> T[] removeObject(T[] array, T other) {

@@ -2,30 +2,52 @@ package com.pwstud.jbash.utils;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
 
 import com.pwstud.jbash.debug.Debug;
+import java.util.concurrent.*;
+
 /**
  * Utility class used in the creation and management of files.
+ * 
  * @author Cirnicianu Ciprian Nicolae
- * @version 1.2
- * @since 1.0 
+ * @version 1.3
+ * @since 1.0
  */
 public abstract class FileManager {
+  private static final ConcurrentHashMap<File, StringBuilder> fileBuffers = new ConcurrentHashMap<>();
+  private static final ConcurrentLinkedQueue<File> flushQueue = new ConcurrentLinkedQueue<>();
 
-  /** 
-   * Gets the absolute path of the project's root directory. 
+  static {
+    Thread flusherThread = new Thread(() -> {
+      while (true) {
+        try {
+          File file = flushQueue.poll();
+          if (file != null) {
+            flushBufferToFile(file);
+            Thread.sleep(1000); // Wait one second AFTER writing is done
+          } else {
+            Thread.sleep(50); // Avoid tight loop
+          }
+        } catch (Exception e) {
+          Debug.logError(e);
+        }
+      }
+    });
+    flusherThread.setDaemon(true);
+    flusherThread.start();
+  }
+
+  /**
+   * Gets the absolute path of the project's root directory.
    */
   public static String getProjectPath() {
     return Paths.get("").toAbsolutePath().toString().replace("\\", "/") + "/";
   }
 
-  /** 
-   * Creates a new file with metadata stored in the first line. 
+  /**
+   * Creates a new file with metadata stored in the first line.
    */
   public static File createFile(String filePath) {
     try {
@@ -46,106 +68,125 @@ public abstract class FileManager {
     }
   }
 
-  /** 
-   * Writes data to the file, either appending or overwriting it. 
+  /**
+   * Writes data to the file, either appending or overwriting it.
    */
   public static boolean updateFile(File file, String text, boolean append) {
     try {
-      BasicFileAttributes attrs = Files.readAttributes(Paths.get(file.getPath()), BasicFileAttributes.class,LinkOption.NOFOLLOW_LINKS);
-      String metadata = file.getName() + ", " + file.getPath() + ", " + attrs.creationTime() + ", "
-          + attrs.lastModifiedTime() + ", " + attrs.size() + " bytes";
-
-      // Read existing content (excluding metadata)
-      String existingData = readFile(file);
-      String[] parts = existingData.split("\\[META-END\\]", 2); // Escape `[` and `]`
-      String fileContent = (parts.length > 1) ? parts[1] : "";
-
-      // If appending, keep existing content
-      String newContent = append ? fileContent + text : text;
-
-      // Write metadata and new content
-      try (FileWriter writer = new FileWriter(file, false)) {
-        writer.write("[" + metadata + "][META-END]" + newContent);
+      fileBuffers.compute(file, (f, buf) -> {
+        if (buf == null) buf = new StringBuilder();
+        synchronized (buf) {
+          buf.append(text);
+        }
+        return buf;
+      });
+  
+      if (!flushQueue.contains(file)) {
+        flushQueue.add(file);
       }
-
+  
       return true;
     } catch (Exception e) {
       Debug.logError(e);
       return false;
     }
   }
+  
 
-  /** 
-   * Reads the full contents of a file as a string. 
+  /**
+   * Reads the full contents of a file as a string.
    */
   public static String readFile(String filePath) {
     return readFile(new File(getProjectPath(), filePath));
   }
 
   /**
-   * Reads the full contents of a file as a string. 
+   * Reads the full contents of a file as a string.
    */
   public static String readFile(File file) {
     try (Scanner scanner = new Scanner(file)) {
       StringBuilder output = new StringBuilder();
       while (scanner.hasNextLine()) {
-        output.append(scanner.nextLine()).append("\n");
+        output.append(scanner.nextLine());
       }
-      return output.toString().trim(); // Remove trailing newline
+      String fileData = output.toString();
+
+      StringBuilder buffer = fileBuffers.get(file);
+      if (buffer != null) {
+        synchronized (buffer) {
+          fileData += buffer.toString(); // Combine with unwritten buffer
+        }
+      }
+
+      return fileData;
     } catch (Exception e) {
       Debug.logError(e);
       return null;
     }
   }
 
-  /** 
-   * Extracts the metadata from a file. 
-   */
-  public static String extractMetadata(File file) {
-    String content = readFile(file);
-    if (content != null && content.contains("[META-END]")) {
-      return content.split("\\[META-END\\]", 2)[0]; // Extract metadata part
-    }
-    return null;
-  }
-
   /**
-   * Reads a file and splits its content into an array based on a separator. 
+   * Flushes the contents of the buffer to a file. this is helpfull for deferring
+   * file manipulation, keeping a seperate thread on the side, that manages just that.
+   * @param file
+   */
+  private static void flushBufferToFile(File file) {
+    try {
+      StringBuilder buffer = fileBuffers.get(file);
+      if (buffer == null) return;
+  
+      String toWrite;
+      synchronized (buffer) {
+        if (buffer.length() == 0) return; // Nothing to flush
+        toWrite = buffer.toString();
+        buffer.setLength(0); // Clear buffer
+      }
+  
+      try (FileWriter writer = new FileWriter(file, true)) {
+        writer.write(toWrite);
+      }
+    } catch (Exception e) {
+      Debug.logError(e);
+    }
+  }
+  
+  /**
+   * Reads a file and splits its content into an array based on a separator.
    */
   public static String[] readLines(File file, String separator) {
     return readFile(file).split(separator);
   }
 
   /**
-   * Deletes a file. 
+   * Deletes a file.
    */
   public static boolean deleteFile(File file) {
     return file.delete();
   }
 
   /**
-   * Deletes a file by path. 
+   * Deletes a file by path.
    */
   public static boolean deleteFile(String filePath) {
     return new File(getProjectPath(), filePath).delete();
   }
 
-  /** 
-   * Checks if a file exists. 
+  /**
+   * Checks if a file exists.
    */
   public static boolean fileExists(File file) {
     return file.exists();
   }
 
-  /** 
-   * Checks if a file exists by path. 
+  /**
+   * Checks if a file exists by path.
    */
   public static boolean fileExists(String filePath) {
     return new File(getProjectPath(), filePath).exists();
   }
 
-  /** 
-   * Retrieves a File object for a given path. 
+  /**
+   * Retrieves a File object for a given path.
    */
   public static File getFile(String filePath) {
     return new File(getProjectPath(), filePath);

@@ -1,7 +1,0 @@
-[log_20250415_114234.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250415_114234.log, 2025-04-15T09:42:34.9594651Z, 2025-04-15T09:42:34.978401Z, 185 bytes][META-END]
-
-java.lang.NullPointerException: Cannot invoke "org.jline.reader.LineReader.readLine(String)" because "com.pwstud.jbash.shell.input.Input.reader" is null
-	at com.pwstud.jbash.shell.input.Input.read(Input.java:49)
-	at com.pwstud.jbash.shell.processes.bash.stdout(bash.java:14)
-	at com.pwstud.jbash.shell.processes.system.stdout(system.java:19)
-	at com.pwstud.jbash.Main.main(Main.java:15)

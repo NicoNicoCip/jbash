@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.pwstud.jbash.utils.LogsManager;
+
 /**
  * Utilitarian class used in printing and logging to the terminal in a controlled manner.
  * @see LogsManager
@@ -24,9 +26,8 @@ public abstract class Debug {
     }
 
     for (T arg : args) {
-      LogsManager.log(arg.toString());
       System.out.print(arg);
-    }
+    } 
   }
 
   /**
@@ -35,12 +36,11 @@ public abstract class Debug {
    */
   public static final <T> void logn(T ... args) {
     if(args.length == 0) {
-      System.out.print("\n");
+      log("\n");
     }
 
     for (T arg : args) {
-      LogsManager.log(arg.toString());
-      System.out.println(arg);
+      log(arg, "\n");
     }
   }
 
@@ -50,7 +50,7 @@ public abstract class Debug {
    */
   public static final <T> void logf(String format, T ... args) {
     PrintStream stream = System.out.printf(format, args);
-    LogsManager.log(stream.toString());
+    log(stream.toString());
   }
 
   /**

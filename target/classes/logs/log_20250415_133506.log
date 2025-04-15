@@ -1,7 +1,0 @@
-[log_20250415_133506.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250415_133506.log, 2025-04-15T11:35:06.540116Z, 2025-04-15T11:35:06.5765099Z, 183 bytes][META-END]
-FINEST: Loading history from: data\system\.historial
-FINEST: Registering signal INT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x00000155010a9788@1f3f4916
-FINEST: Registering signal WINCH with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x00000155010a9788@59d016c9
-FINEST: Ignoring unsupported signal WINCH
-FINEST: Registering signal CONT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x00000155010a9788@60d8c9b7
-FINEST: Ignoring unsupported signal CONT

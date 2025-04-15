@@ -19,7 +19,7 @@ public class bash implements JBASHProcess {
     JBASHProcess proc = Main.jbashpm.getProcessByID(command[0].toLowerCase());
 
     if (proc == null) {
-      Debug.log("The command \"", command[0], "\" not found.\n");
+      Debug.log("The command \"", command[0], "\" not found.", "\n");
       return "10"; // exit without closing
     }
 

@@ -1,7 +1,0 @@
-[log_20250411_145052.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250411_145052.log, 2025-04-11T12:50:52.6742502Z, 2025-04-11T12:50:52.6958256Z, 185 bytes][META-END]
-System Loadedsystem:0Entered bash
-java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 0
-	at com.pwstud.jbash.utils.StringUtils.breakApart(StringUtils.java:57)
-	at com.pwstud.jbash.shell.processes.bash.update(bash.java:27)
-	at com.pwstud.jbash.shell.processes.system.update(system.java:19)
-	at com.pwstud.jbash.Main.main(Main.java:17)

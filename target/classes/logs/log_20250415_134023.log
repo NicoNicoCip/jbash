@@ -1,0 +1,25 @@
+[log_20250415_134023.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250415_134023.log, 2025-04-15T11:40:23.4254189Z, 2025-04-15T11:40:23.4602551Z, 185 bytes][META-END]
+FINEST: Loading history from: data\system\.historial
+FINEST: Registering signal INT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@1ed1993a
+FINEST: Registering signal WINCH with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@4b5a5ed1
+FINEST: Ignoring unsupported signal WINCH
+FINEST: Registering signal CONT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@3967e60c
+FINEST: Ignoring unsupported signal CONT
+FINEST: Binding: Reference[self-insert]
+FINEST: Binding: Reference[self-insert]
+FINEST: Binding: Reference[self-insert]
+FINEST: Binding: Reference[self-insert]
+FINEST: Binding: Reference[backward-delete-char]
+FINEST: Binding: Reference[self-insert]
+FINEST: Binding: Reference[accept-line]
+FINEST: Saving history to: data\system\.historial
+FINEST: Registering signal INT with handler SIG_DFL
+FINEST: Registering signal WINCH with handler SIG_DFL
+FINEST: Ignoring unsupported signal WINCH
+FINEST: Registering signal CONT with handler SIG_DFL
+FINEST: Ignoring unsupported signal CONT
+FINEST: Registering signal INT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@63021689
+FINEST: Registering signal WINCH with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@703580bf
+FINEST: Ignoring unsupported signal WINCH
+FINEST: Registering signal CONT with handler org.jline.terminal.impl.AbstractWindowsTerminal$$Lambda$293/0x000001f2810a94e8@3e92efc3
+FINEST: Ignoring unsupported signal CONT

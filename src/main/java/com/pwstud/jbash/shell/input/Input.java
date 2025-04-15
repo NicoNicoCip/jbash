@@ -5,8 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -19,20 +17,11 @@ import org.jline.terminal.TerminalBuilder;
 import com.pwstud.jbash.debug.Debug;
 
 public class Input {
-  private static Logger jLineLogger = Logger.getLogger("org.jline");
-  private static Logger rootLogger = Logger.getLogger("");
+  public static LineReader reader;
   private static Path historyFile = Paths.get("data/system/.historial");
 
-  // enable logging by setting this to Level.FINEST or Level.OFF to disable
-  private static final Level state = Level.OFF;
-
-  public static LineReader reader;
-
   public static void create() {
-    rootLogger.setLevel(state);
-    jLineLogger.setLevel(state);
-    rootLogger.getHandlers()[0].setLevel(state);
-
+  
     try {
       reader = LineReaderBuilder.builder()
           .terminal(TerminalBuilder.builder()

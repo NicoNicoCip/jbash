@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ClassHook {
 
   public static <T> List<T> getInstancesOfType(Class<T> type, String basePackage) {
+
     List<T> instances = new ArrayList<>();
     Reflections reflections = new Reflections(basePackage);
 

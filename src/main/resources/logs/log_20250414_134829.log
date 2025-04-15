@@ -1,6 +1,0 @@
-[log_20250414_134829.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250414_134829.log, 2025-04-14T11:48:29.1647713Z, 2025-04-14T11:48:29.1878338Z, 185 bytes][META-END]
-System LoadedEntered bash
-java.lang.NullPointerException: Cannot invoke "com.pwstud.jbash.shell.processes.JBASHProcess.stdIn(String[])" because "proc" is null
-	at com.pwstud.jbash.shell.processes.bash.create(bash.java:24)
-	at com.pwstud.jbash.shell.processes.system.create(system.java:11)
-	at com.pwstud.jbash.Main.main(Main.java:13)

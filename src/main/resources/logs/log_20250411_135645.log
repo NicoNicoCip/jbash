@@ -1,4 +1,0 @@
-[log_20250411_135645.log, c:\Users\finnw\Repos\Java\jbash\src\main\resources\logs\log_20250411_135645.log, 2025-04-11T11:56:45.810748Z, 2025-04-11T11:56:45.810748Z, 30 bytes][META-END]
-
-java.lang.NullPointerException: Cannot invoke "com.pwstud.jbash.shell.processes.JBASHProcess.create()" because "proc" is null
-	at com.pwstud.jbash.Main.main(Main.java:16)

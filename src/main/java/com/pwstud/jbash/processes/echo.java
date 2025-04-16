@@ -3,9 +3,9 @@ package com.pwstud.jbash.processes;
 import java.util.Arrays;
 
 import com.pwstud.jbash.debug.Debug;
-import com.pwstud.jbash.shell.process.JBASHProcess;
+import com.pwstud.jbash.shell.process.JBashProcess;
 
-public class echo implements JBASHProcess {
+public class echo extends JBashProcess {
 
   @Override
   public String stdout(String[] stdin) {

@@ -1,6 +1,5 @@
 package com.pwstud.jbash.shell.process;
 
-
-public interface JBASHProcess {
+public abstract class JBashProcess {
   public abstract String stdout(String[] stdin);
 }

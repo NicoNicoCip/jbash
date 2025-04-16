@@ -29,21 +29,21 @@ public class LogsManager {
       String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
       String logPath = "/src/main/resources/logs/log_" + timestamp + ".log";
       currentLogFile = FileManager.createFile(logPath);
-  
+
       OutputStream logOutput = new OutputStream() {
         @Override
         public void write(int b) {
           String s = Character.toString((char) b);
           FileManager.updateFile(currentLogFile, s, true);
         }
-  
+
         @Override
         public void write(byte[] b, int off, int len) {
           String s = new String(b, off, len);
           FileManager.updateFile(currentLogFile, s, true);
         }
       };
-  
+
       // TeeOutputStream to write to both the terminal and log file
       OutputStream teeOut = new OutputStream() {
         @Override
@@ -51,61 +51,61 @@ public class LogsManager {
           originalOut.write(b);
           logOutput.write(b);
         }
-  
+
         @Override
         public void write(byte[] b, int off, int len) throws IOException {
           originalOut.write(b, off, len);
           logOutput.write(b, off, len);
         }
-  
+
         @Override
         public void flush() throws IOException {
           originalOut.flush();
           logOutput.flush();
         }
-  
+
         @Override
         public void close() throws IOException {
           originalOut.close();
           logOutput.close();
         }
       };
-  
+
       OutputStream teeErr = new OutputStream() {
         @Override
         public void write(int b) throws IOException {
           originalErr.write(b);
           logOutput.write(b);
         }
-  
+
         @Override
         public void write(byte[] b, int off, int len) throws IOException {
           originalErr.write(b, off, len);
           logOutput.write(b, off, len);
         }
-  
+
         @Override
         public void flush() throws IOException {
           originalErr.flush();
           logOutput.flush();
         }
-  
+
         @Override
         public void close() throws IOException {
           originalErr.close();
           logOutput.close();
         }
       };
-  
+
       logStream = new PrintStream(teeOut, true);
       System.setOut(logStream);
       System.setErr(new PrintStream(teeErr, true));
-  
+
     } catch (Exception e) {
       Debug.logError(e);
     }
   }
-  
+
   /**
    * Deletes all log files in resources/log except the latest one.
    */
@@ -133,9 +133,37 @@ public class LogsManager {
   }
 
   /**
+   * Appends a message to the current log file only.
+   */
+  public static void out(String message) {
+    if (currentLogFile != null) {
+      FileManager.updateFile(currentLogFile, message + System.lineSeparator(), true);
+    }
+  }
+
+  /**
    * Returns the currently active log file.
    */
   public static File getCurrentLogFile() {
     return currentLogFile;
+  }
+
+  /**
+   * Logs to file and also prints to terminal.
+   */
+  public static void outWithEcho(String message) {
+    out(message); // reuse logging method
+    if (originalOut != null) {
+      originalOut.print(message);
+    }
+  }
+
+  /**
+   * Prints to terminal only, does NOT log.
+   */
+  public static void terminalOnly(String message) {
+    if (originalOut != null) {
+      originalOut.print(message);
+    }
   }
 }

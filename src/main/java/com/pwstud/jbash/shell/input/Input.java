@@ -15,6 +15,7 @@ import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.TerminalBuilder;
 
 import com.pwstud.jbash.debug.Debug;
+import com.pwstud.jbash.utils.LogsManager;
 
 public class Input {
   public static LineReader reader;
@@ -47,6 +48,7 @@ public class Input {
 
   public static String read() {
     String out = reader.readLine(">> ").replaceAll("`\n", "\n");
+    LogsManager.out(">> " + out);
     return out;
   }
 

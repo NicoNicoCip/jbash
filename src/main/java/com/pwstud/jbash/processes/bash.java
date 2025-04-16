@@ -3,10 +3,10 @@ package com.pwstud.jbash.processes;
 import com.pwstud.jbash.Main;
 import com.pwstud.jbash.debug.Debug;
 import com.pwstud.jbash.shell.input.Input;
-import com.pwstud.jbash.shell.process.JBASHProcess;
+import com.pwstud.jbash.shell.process.JBashProcess;
 import com.pwstud.jbash.utils.StringUtils;
 
-public class bash implements JBASHProcess {
+public class bash extends JBashProcess {
   Input input = new Input();
 
   @Override
@@ -16,7 +16,7 @@ public class bash implements JBASHProcess {
     if(in.equals("")) return "10"; // exit without closing
 
     String[] command = StringUtils.breakApart(in);
-    JBASHProcess proc = Main.jbashpm.getProcessByID(command[0].toLowerCase());
+    JBashProcess proc = Main.jbashpm.getProcessByID(command[0].toLowerCase());
 
     if (proc == null) {
       Debug.log("The command \"", command[0], "\" not found.", "\n");

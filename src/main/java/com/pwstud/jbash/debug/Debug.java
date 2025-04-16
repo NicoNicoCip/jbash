@@ -26,7 +26,7 @@ public abstract class Debug {
     }
 
     for (T arg : args) {
-      System.out.print(arg);
+      System.out.print(arg.toString());
     } 
   }
 
@@ -75,7 +75,9 @@ public abstract class Debug {
       return;
     }
 
-    System.out.print(args);
+    for (T arg : args) {
+      LogsManager.terminalOnly(arg.toString());
+    }
   }
 
   /**

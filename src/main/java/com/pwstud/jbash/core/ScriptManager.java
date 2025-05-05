@@ -73,9 +73,13 @@ public class ScriptManager {
             break;
           }
 
-          if (Input.readFreed() == CharList.UP_ARROW) {
+          if (Input.readFreed() == CharList.CTRL_X) {
             setRunning(false);
             break;
+          }
+
+          while (Input.readFreed() == CharList.CTRL_S) {
+            Debug.out("PAUSED . . .");
           }
 
           if (switchedLayer || !scriptLayer.getRunning())

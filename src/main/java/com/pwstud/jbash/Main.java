@@ -9,6 +9,7 @@ public class Main {
 
   public static void main(String[] args) {
     Input.create();
+    Input.resizeDaemon();
     LogsManager.initLogRedirection();
     Debug.log("Started Engine!", "\n");
     try {

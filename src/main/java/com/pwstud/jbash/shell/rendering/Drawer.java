@@ -1,6 +1,5 @@
 package com.pwstud.jbash.shell.rendering;
 
-import org.jline.terminal.Size;
 
 import com.pwstud.jbash.debug.Debug;
 import com.pwstud.jbash.shell.input.Input;
@@ -14,19 +13,9 @@ public class Drawer {
   // index will be drawn over a layer with a lower one. (0 draws under 1, 1 draws
   // under 2, etc.) All the layers then get crunched to the pixelGrid matrix that
   // gets drawn to the screen.
-  private int height = 4;
-  private int width = 16;
+  private int height = 32;
+  private int width = 32;
   private Pixel[][] pixelGrid = new Pixel[height][width];
-
-  public Drawer() {
-    updateBounds();
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        this.pixelGrid[y][x] = new Pixel();
-      }
-    }
-  }
 
   public static void disableCursor() {
     Debug.out("\u001B[?25l");
@@ -52,11 +41,12 @@ public class Drawer {
     StringBuffer buffer = new StringBuffer();
     homeCursor();
 
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
+    for (int y = 0; y < pixelGrid.length; y++) {
+      for (int x = 0; x < pixelGrid[y].length; x++) {
         buffer
-            .append(pixelGrid[y][x].backgroundColor.formatBackground())
-            .append(pixelGrid[y][x].color.formatColor());
+        .append(pixelGrid[y][x].backgroundColor.formatBackground())
+        .append(pixelGrid[y][x].color.formatColor());
+
         if (pixelGrid[y][x].character == 0)
           buffer.append(" ");
         else
@@ -71,6 +61,15 @@ public class Drawer {
 
   public void stringToPixelChars(String pixelChars) {
     String[] lines = pixelChars.split("\n");
+    this.pixelGrid = new Pixel[lines.length][0];
+    for (int y = 0; y < lines.length; y++) {
+      char[] charLine = lines[y].toCharArray();
+      this.pixelGrid[y] = new Pixel[charLine.length];
+      for (int x = 0; x < charLine.length; x++) {
+        this.pixelGrid[y][x] = new Pixel();
+      }
+    }
+
     for (int y = 0; y < lines.length; y++) {
       char[] charLine = lines[y].toCharArray();
       for (int x = 0; x < charLine.length; x++) {
@@ -100,18 +99,14 @@ public class Drawer {
   }
 
   public void updateBounds() {
-    Input.reader.getTerminal().getAttributes();
-    Size size = Input.reader.getTerminal().getSize(); // re-fetches real width/height
-
-    int newWidth = size.getColumns();
-    int newHeight = size.getRows();
-
-    if (height != newHeight || width != newWidth) {
-      Input.reader.getTerminal();
-      Pixel[][] newGrid = new Pixel[newHeight][newWidth];
+    int[] newBounds = Input.getBounds();
+    if (width != newBounds[1] || height != newBounds[0]) {
+      width = newBounds[0];
+      height = newBounds[1];
+      Pixel[][] newGrid = new Pixel[height][width];
       Pixel lasnNotNull = new Pixel();
-      for (int y = 0; y < newHeight; y++) {
-        for (int x = 0; x < newWidth; x++) {
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
           if (y < pixelGrid.length && x < pixelGrid[0].length) {
             newGrid[y][x] = pixelGrid[y][x]; // copy existing pixel
             lasnNotNull = pixelGrid[y][x];
@@ -122,8 +117,6 @@ public class Drawer {
       }
 
       pixelGrid = newGrid;
-      width = newWidth;
-      height = newHeight;
     }
   }
 

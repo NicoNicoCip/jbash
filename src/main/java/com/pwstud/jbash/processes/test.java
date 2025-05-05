@@ -9,5 +9,4 @@ public class test extends JBashProcess{
     new rapi().stdrun();
     return "1";
   }
-  
 }

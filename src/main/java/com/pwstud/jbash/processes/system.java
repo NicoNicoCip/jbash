@@ -1,7 +1,7 @@
 package com.pwstud.jbash.processes;
 
-import com.pwstud.jbash.Main;
 import com.pwstud.jbash.shell.process.JBashProcess;
+import com.pwstud.jbash.shell.process.ProcessManager;
 
 public class system extends JBashProcess {
 
@@ -17,7 +17,7 @@ public class system extends JBashProcess {
 
   @Override
   public String stdout(String[] stdin) {
-    lastProcess = Main.jbashpm.getProcessByID("bash");
+    lastProcess = ProcessManager.getProcessByID("bash");
     return lastProcess.stdout(null);
   }
 }

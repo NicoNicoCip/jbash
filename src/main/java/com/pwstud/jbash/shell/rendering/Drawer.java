@@ -1,26 +1,26 @@
 package com.pwstud.jbash.shell.rendering;
 
+import org.jline.terminal.Size;
+
 import com.pwstud.jbash.debug.Debug;
+import com.pwstud.jbash.shell.input.Input;
 
 public class Drawer {
   // this is used for creating and holding the pixel data used in the displaying
   // of anything.
+
+  // the way it works is simple. you can add multiple layers to the pixel grid,
+  // and you can add it to a specific layer. In general, a layer with a greater
+  // index will be drawn over a layer with a lower one. (0 draws under 1, 1 draws
+  // under 2, etc.) All the layers then get crunched to the pixelGrid matrix that
+  // gets drawn to the screen.
   private int height = 4;
   private int width = 16;
   private Pixel[][] pixelGrid = new Pixel[height][width];
 
   public Drawer() {
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        this.pixelGrid[y][x] = new Pixel();
-      }
-    }
-  }
+    updateBounds();
 
-  public Drawer(int width, int height) {
-    this.width = width;
-    this.height = height;
-    this.pixelGrid = new Pixel[height][width];
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         this.pixelGrid[y][x] = new Pixel();
@@ -33,22 +33,38 @@ public class Drawer {
   }
 
   public static void enableCursor() {
-    Debug.out("\u001B[?25"); //TODO: fix mouse cursor enabling.
+    Debug.out("\u001B[?25h");
   }
 
-  // TODO: enable the cursor after rapi end and disable it while printing.
+  public static void homeCursor() {
+    Debug.out("\u001B[H");
+  }
+
+  public static void enableMouseSupport() {
+    Debug.out("\u001B[?1003h");
+  }
+
+  public static void disableMouseSupport() {
+    Debug.out("\u001B[?1003l");
+  }
 
   public void out() {
-    Debug.out("\u001B[0;0H");
     StringBuffer buffer = new StringBuffer();
+    homeCursor();
+
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         buffer
             .append(pixelGrid[y][x].backgroundColor.formatBackground())
-            .append(pixelGrid[y][x].color.formatColor())
-            .append(pixelGrid[y][x].character);
+            .append(pixelGrid[y][x].color.formatColor());
+        if (pixelGrid[y][x].character == 0)
+          buffer.append(" ");
+        else
+          buffer.append(pixelGrid[y][x].character);
       }
-      buffer.append(Color.ACCC).append("\n");
+      buffer.append(Color.ACCC);
+      if (y != height - 1)
+        buffer.append("\n");
     }
     Debug.out(buffer.toString());
   }
@@ -81,6 +97,34 @@ public class Drawer {
       }
     }
     pixelGrid = temp;
+  }
+
+  public void updateBounds() {
+    Input.reader.getTerminal().getAttributes();
+    Size size = Input.reader.getTerminal().getSize(); // re-fetches real width/height
+
+    int newWidth = size.getColumns();
+    int newHeight = size.getRows();
+
+    if (height != newHeight || width != newWidth) {
+      Input.reader.getTerminal();
+      Pixel[][] newGrid = new Pixel[newHeight][newWidth];
+      Pixel lasnNotNull = new Pixel();
+      for (int y = 0; y < newHeight; y++) {
+        for (int x = 0; x < newWidth; x++) {
+          if (y < pixelGrid.length && x < pixelGrid[0].length) {
+            newGrid[y][x] = pixelGrid[y][x]; // copy existing pixel
+            lasnNotNull = pixelGrid[y][x];
+          } else {
+            newGrid[y][x] = lasnNotNull; // create new pixel if outside old bounds
+          }
+        }
+      }
+
+      pixelGrid = newGrid;
+      width = newWidth;
+      height = newHeight;
+    }
   }
 
   public Pixel[][] getPixelGrid() {

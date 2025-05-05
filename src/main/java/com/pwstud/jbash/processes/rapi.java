@@ -1,9 +1,7 @@
 package com.pwstud.jbash.processes;
 
-import com.pwstud.jbash.Main;
+import com.pwstud.jbash.core.ScriptManager;
 import com.pwstud.jbash.shell.process.RapiProcess;
-import com.pwstud.jbash.shell.rendering.Color;
-import com.pwstud.jbash.shell.rendering.Drawer;
 
 public class rapi extends RapiProcess {
 
@@ -15,18 +13,7 @@ public class rapi extends RapiProcess {
 
   @Override
   public void stdrun() {
-    Main.jbashpm.getProcessByID("clear").stdout(null);
-    String chars = """
-    +-----------+
-    |   HELLO   |
-    |   WORLD   |
-    +-----------+""";
-    Drawer drawer = new Drawer(13, 4);
-    drawer.stringToPixelChars(chars);
-    drawer.setBackgroundColor(new Color(0, 0, 255));
-    drawer.setColor(new Color(255, 255, 255));
-    while (true) {
-      drawer.out();
-    }
+    ScriptManager.setCurrentLayer(3);
+    ScriptManager.runLayered();
   }
 }

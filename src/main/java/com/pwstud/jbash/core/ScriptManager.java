@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.pwstud.jbash.debug.Debug;
-import com.pwstud.jbash.shell.input.CharList;
-import com.pwstud.jbash.shell.input.Input;
 import com.pwstud.jbash.utils.ClassHook;
 
 /**
@@ -73,14 +71,14 @@ public class ScriptManager {
             break;
           }
 
-          if (Input.readFreed() == CharList.CTRL_X) {
-            setRunning(false);
-            break;
-          }
+          // if (Input.readFreed() == CharList.CTRL_X) {
+          //   setRunning(false);
+          //   break;
+          // }
 
-          while (Input.readFreed() == CharList.CTRL_S) {
-            Debug.out("PAUSED . . .");
-          }
+          // while (Input.readFreed() == CharList.CTRL_S) {
+          //   Debug.out("PAUSED . . .");
+          // }
 
           if (switchedLayer || !scriptLayer.getRunning())
             break;

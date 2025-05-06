@@ -1,8 +1,6 @@
 package com.pwstud.jbash.shell.rendering;
 
-
 import com.pwstud.jbash.debug.Debug;
-import com.pwstud.jbash.shell.input.Input;
 
 public class Drawer {
   // this is used for creating and holding the pixel data used in the displaying
@@ -96,28 +94,6 @@ public class Drawer {
       }
     }
     pixelGrid = temp;
-  }
-
-  public void updateBounds() {
-    int[] newBounds = Input.getBounds();
-    if (width != newBounds[1] || height != newBounds[0]) {
-      width = newBounds[0];
-      height = newBounds[1];
-      Pixel[][] newGrid = new Pixel[height][width];
-      Pixel lasnNotNull = new Pixel();
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          if (y < pixelGrid.length && x < pixelGrid[0].length) {
-            newGrid[y][x] = pixelGrid[y][x]; // copy existing pixel
-            lasnNotNull = pixelGrid[y][x];
-          } else {
-            newGrid[y][x] = lasnNotNull; // create new pixel if outside old bounds
-          }
-        }
-      }
-
-      pixelGrid = newGrid;
-    }
   }
 
   public Pixel[][] getPixelGrid() {

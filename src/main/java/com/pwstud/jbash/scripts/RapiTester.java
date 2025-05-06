@@ -1,11 +1,8 @@
 package com.pwstud.jbash.scripts;
 
 
-import java.util.Arrays;
 
 import com.pwstud.jbash.core.Script;
-import com.pwstud.jbash.debug.Debug;
-import com.pwstud.jbash.shell.input.Input;
 import com.pwstud.jbash.shell.process.ProcessManager;
 import com.pwstud.jbash.shell.rendering.Color;
 import com.pwstud.jbash.shell.rendering.Drawer;
@@ -37,8 +34,6 @@ public class RapiTester extends Script {
   @Override
   public void Update() {
     drawer.out();
-    Debug.logn(Arrays.toString(Input.getMouse()));
-    Debug.logn(Arrays.toString(Input.getBounds()));
   }
 
   @Override

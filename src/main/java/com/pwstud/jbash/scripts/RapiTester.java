@@ -1,7 +1,5 @@
 package com.pwstud.jbash.scripts;
 
-
-
 import com.pwstud.jbash.core.Script;
 import com.pwstud.jbash.shell.process.ProcessManager;
 import com.pwstud.jbash.shell.rendering.Color;

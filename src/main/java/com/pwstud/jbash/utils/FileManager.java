@@ -18,14 +18,15 @@ import java.util.concurrent.*;
 public abstract class FileManager {
   private static final ConcurrentHashMap<File, StringBuilder> fileBuffers = new ConcurrentHashMap<>();
   private static final ConcurrentLinkedQueue<File> flushQueue = new ConcurrentLinkedQueue<>();
-
+  private static volatile boolean appending = false;
   static {
     Thread flusherThread = new Thread(() -> {
       while (true) {
         try {
           File file = flushQueue.poll();
           if (file != null) {
-            flushBufferToFile(file);
+            flushBufferToFile(file, appending);
+            appending = false;
             Thread.sleep(1000); // Wait one second AFTER writing is done
           } else {
             Thread.sleep(50); // Avoid tight loop
@@ -84,6 +85,8 @@ public abstract class FileManager {
       if (!flushQueue.contains(file)) {
         flushQueue.add(file);
       }
+
+      appending = Boolean.valueOf(append);
   
       return true;
     } catch (Exception e) {
@@ -130,7 +133,7 @@ public abstract class FileManager {
    * file manipulation, keeping a seperate thread on the side, that manages just that.
    * @param file
    */
-  private static void flushBufferToFile(File file) {
+  private static void flushBufferToFile(File file, boolean append) {
     try {
       StringBuilder buffer = fileBuffers.get(file);
       if (buffer == null) return;
@@ -142,7 +145,7 @@ public abstract class FileManager {
         buffer.setLength(0); // Clear buffer
       }
   
-      try (FileWriter writer = new FileWriter(file, true)) {
+      try (FileWriter writer = new FileWriter(file, append)) {
         writer.write(toWrite);
       }
     } catch (Exception e) {

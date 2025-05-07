@@ -1,47 +1,47 @@
 package com.pwstud.jbash;
 
-import java.util.List;
+import java.util.Arrays;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
-import com.pwstud.jbash.shell.input.EventBus;
+import com.pwstud.jbash.debug.Debug;
 import com.pwstud.jbash.shell.input.EventListener;
-import com.pwstud.jbash.shell.input.JBashTerminal;
+import com.pwstud.jbash.shell.process.ProcessManager;
+import com.pwstud.jbash.utils.StringUtils;
 
 public class Main {
 
   public static void main(String[] args) {
-    // LogsManager.initLogRedirection();
-    // Debug.log("Started Engine!", "\n");
-    // try {
-    // while (true) {
-    // String exitCode = ProcessManager.getProcessByID("system").stdout(null);
-    // if (exitCode.equals("0"))
-    // return;
-    // }
-    // } catch (Exception e) {
-    // Debug.logError(e);
-    // }
-
-    SwingUtilities.invokeLater(() -> {
-      JFrame frame = new JFrame("Custom Terminal");
-
-      // Create the event bus
-      EventBus eventBus = new EventBus();
-
-      EventListener eventListener = new EventListener() {
-        public void onMousePress(int col, int row, int button) {
-
+    Debug.log("Started Engine!", "\n");
+    Debug.getTerminal().printPrompt();
+    Debug.getTerminal().getAutoCompleter().addAll(Arrays.asList(
+      "echo",
+      "exit",
+      "clear",
+      "test"
+    ));
+    Debug.getTerminal().eventBus.register(new EventListener() {
+      @Override
+      public void onCommand(String command) {
+        if(command.startsWith("echo")) {
+          String[] com = StringUtils.breakApart(command);
+          String exitCode = ProcessManager.getProcessByID("echo").stdout(com);
+          Debug.processCode(exitCode);
         }
-      };
 
-      // Add a simple listener for demonstration
-      eventBus.register(eventListener);
+        if(command.startsWith("exit")) {
+          String exitCode = ProcessManager.getProcessByID("exit").stdout(null);
+          Debug.processCode(exitCode);
+        }
 
-      // Launch terminal
-      JBashTerminal term = new JBashTerminal(frame, eventBus);
-      term.getAutoCompleter().addAll(List.of("help", "hello", "exit", "exec", "echo"));
+        if(command.startsWith("clear")) {
+          String exitCode = ProcessManager.getProcessByID("clear").stdout(null);
+          Debug.processCode(exitCode);
+        }
+
+        if(command.startsWith("test")) {
+          String exitCode = ProcessManager.getProcessByID("test").stdout(null);
+          Debug.processCode(exitCode);
+        }
+      }
     });
   }
 }
